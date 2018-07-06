@@ -96,13 +96,14 @@ type LinqTestsFunctional() =
     member public _this.``General purpose LINQ test``() =
         
         let input = [1..10]
+
+        let result = 
+            input 
+            |> filter (fun x -> x % 2 = 0)
+            |> select (fun x -> x + 1)
+            |> max (fun x y -> x > y)
         
-        (* TODO: Read about pipeline first *)
-        input 
-        |> filter (fun x -> x % 2 = 0)
-        |> select (fun x -> x + 1)
-        |> max (fun x y -> x > y)
-        //printfn "%d" result
+        printfn "%d" result
 
         
 
