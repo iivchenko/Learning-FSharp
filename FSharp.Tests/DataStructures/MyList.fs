@@ -60,9 +60,17 @@ let reverse list =
         | Node(x, tail) -> realyReverse tail <| x + acc
     realyReverse list Empty
 
-let sort compare list =
+let rec selectionSort compare list =
     (* Finish him!!*)
+    match list with
+    | Empty -> Empty
+    | Node(x, Empty) -> list
+    | Node(x, Node(y, tail)) when compare x y = 1 -> 
+        Node(x, selectionSort compare <| Node(y, tail))
+    | Node(x, Node(y, tail)) -> 
+        selectionSort compare <| Node(y, selectionSort compare <| Node(x, tail))
 
+(* Select Many*)
 
 let inline (!-) x =
     fun next -> Node(x, next)
@@ -72,7 +80,6 @@ let inline (-!-) x y =
 
 let inline (-!) x y =
     x <| Node(y, Empty)
-
 
 [<EntryPoint>]
 let main args =
@@ -105,10 +112,15 @@ let main args =
     |> iter (fun x -> (printf "%i " x))
 
     printfn ""
+
+    printfn "Sorted is %i" <| selectionSort (fun x y -> if x > y then 1 else -1) list3
+
+    printfn ""
     
     printfn "First is %i" <| first (fun x -> x % 4 = 0) list3
     printfn "Last is %i" <| last (fun x -> x % 4 = 0) list3
     printfn "Max is %i" <| max (fun x y -> if x > y then 1 else -1) list3
     printfn "Min is %i" <| min (fun x y -> if x > y then 1 else -1) list3
+    
     
     0
