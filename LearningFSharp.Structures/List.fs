@@ -19,8 +19,8 @@ type List<'T> =
             | Node(x, tail) -> Node(x, (concatInternal tail acc))        
         concatInternal head tail
 
-
 module public ListExt =
+
     let rec iter action list  =
         match list with
         | Empty -> ()
@@ -93,8 +93,6 @@ module public ListExt =
     (* Select Many*)
     (* Aggregate*)
     (* Average *)
-    (* Append *)
-    (* Concat *)
 
     let count predicate list =
         let rec countInternal predicate list acc =
@@ -104,15 +102,7 @@ module public ListExt =
                 countInternal predicate tail acc + 1
             | Node(_, tail) ->
                 countInternal predicate tail acc
-        countInternal predicate list 0
-
-    let rec contains compare list =
-        match list with
-        | Empty -> false
-        | Node(x, _) when compare x ->
-            true
-        | Node(_, tail) ->
-            contains compare tail
+        countInternal predicate list 0 
 
     (* Sort algorithms *)
     let rec selectionSort compare list =
@@ -134,53 +124,3 @@ module public ListExt =
 
     let inline (-!) x y =
         x <| Node(y, Empty)
-
-    //[<EntryPoint>]
-    //let main args =
-
-    //    let list1 = !- 1 -!- 2 -!- 3 -!- 7 -!- 4 -! 5   
-    
-    //    //iter (fun x -> (printfn "%i" x)) list1
-
-    //    let list2 = 1 + list1
-    
-    //    printf "Initial "
-    //    iter (fun x -> (printf "%i " x)) list2
-
-    //    printfn ""
-    
-    //    iter (fun x -> (printf "%i " x)) list3
-    
-    //    printfn ""
-
-    //    printf "Reverse "
-    //    list3
-    //    |> reverse
-    //    |> iter (fun x -> (printf "%i " x))
-
-    //    printfn ""
-
-    //    //printfn "Sorted is %i" <| selectionSort (fun x y -> if x > y then 1 else -1) list3
-
-    //    printfn ""
-    
-        
-    //    printfn "Contains (4) %b" <| contains (fun x -> x = 4) list3
-    //    printfn "Contains (3) %b" <| contains (fun x -> x = 3) list3
-    //    printfn "Count = %i" <| count (fun x -> true) list3
-    //    printfn "Count x\4 = %i" <| count (fun x -> x % 4 = 0) list3
-    //    printfn "All x\2 = %b" <| all (fun x -> x % 2 = 0) list3
-    //    printfn "All x\4 = %b" <| all (fun x -> x % 4 = 0) list3
-    //    printfn "Any x\4 = %b" <| any (fun x -> x % 4 = 0) list3
-    //    printfn "Any x\5 = %b" <| all (fun x -> x % 5 = 0) list3
-    
-    //    let list4 = list3 + 15
-    //    printf "List4: " 
-    //    iter (fun x -> (printf "%i " x)) list4
-
-    //    let list5 = list1 + list3
-    //    printfn "List5: " 
-    //    iter (fun x -> (printf "%i " x)) list5
-
-
-    //    0
