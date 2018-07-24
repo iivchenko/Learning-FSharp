@@ -8,9 +8,6 @@
     <Compile Include="LinqTestsFunctional.fs" />
     <Compile Include="LinqTestsImperative.fs" />
     <Compile Include="Math.fs" />
-    <Compile Include="DataStructures\MyTree.fs" />
-    <Compile Include="DataStructures\MyList.fs" />
-    <Compile Include="DataStructures\MyListTests.fs" />
   </ItemGroup>
 
   <!-- <ItemGroup>
