@@ -1,4 +1,4 @@
-namespace FSharp.Game
+namespace LearningFSharp.ConsoleGame
 
 open System
 open System.Threading
