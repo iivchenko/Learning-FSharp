@@ -979,3 +979,10 @@ type ListTests() =
 
         // Assert
         assertEquals expected actual
+
+    // TODO: Finish
+    [<Test>]
+    member this.test111()=
+        let list = !! 1 + 2 + 3 + 4
+
+        iter (fun x -> (printf "%i " x)) list

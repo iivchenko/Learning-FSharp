@@ -4,29 +4,26 @@ namespace LearningFSharp.ConsoleGameTests
 
 open NUnit.Framework
 open LearningFSharp.ConsoleGame
-
-type TestGame(update, draw) =
-    inherit Game()
-    
-    member private this._update = update
-    member private this._draw = draw
-    
-    override this.Update() =
-        this._update()
-
-    override this.Draw() =
-        this._draw()
+open System.Threading.Tasks
 
 [<TestFixture>]
-type GameTests =
+type GameTests() =
 
     [<Test>]
     member this.``Some test``() =
         
         let update = fun() -> printfn "update"
 
-        let draw = fun() -> printfn "draw"
+        let draw = fun() -> 
+            printfn "draw"
+            
 
-        let game = new TestGame(update, draw)
-        game.Update()
-    
+        let game = new Game(update, draw)
+        let exit = 
+             System.Threading.Thread.Sleep(3000)
+             game.Exit()
+
+        let task = Task.Run(fun() -> exit)
+
+        game.Run()
+

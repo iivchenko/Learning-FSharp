@@ -124,3 +124,6 @@ module public ListExt =
 
     let inline (-!) x y =
         x <| Node(y, Empty)
+
+    let inline (!!) x =
+        Node(x, Empty)
