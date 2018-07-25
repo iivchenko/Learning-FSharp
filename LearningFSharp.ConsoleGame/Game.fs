@@ -4,7 +4,7 @@ open System
 open System.Threading
 
 [<AbstractClass>]
-type Game = 
+type Game() = 
     // World Matrix
 
     member private this._frameTime = new TimeSpan(int64(1/60 * 1000))
@@ -15,7 +15,7 @@ type Game =
     
     member this.Run() =
         while true do
-            let start = DateTime.Now            
+            let start = DateTime.Now
             // processInput
             this.Update()
             this.Draw()
