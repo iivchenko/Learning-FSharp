@@ -16,6 +16,19 @@ type ListTests() =
         | _, _ -> failwith "Different lists size!"
 
     [<Test>]
+    member this.``Test: 'Megatest'.``() =
+        let initial = !! 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10
+
+        let actual = 
+            initial
+            |> map (fun x -> x + 1)
+            |> filter (fun x -> x % 2 = 0)
+            |> reverse 
+
+        printf "Actual list: "
+        iter (fun x -> (printf "%i " x)) actual
+
+    [<Test>]
     member this.``Test: '+'. 'T + List<'T>.``() =
 
         // Arrange
@@ -927,6 +940,114 @@ type ListTests() =
         
         // Assert
         Assert.That(actual, Is.EqualTo(expected))
+
+    [<Test>]
+    member this.``Test: 'mapMany'. If list is EMPTY then return empty list.``() =
+
+        // Arrange
+        let initial = List.Empty
+        let expected = List.Empty
+        
+        // Act
+        let actual = mapMany (fun x -> x + 1) initial
+
+        printf "Initial list: "
+        iter (fun x -> (printf "%i " x)) initial
+
+        printfn ""
+
+        printf "Expected list: "
+        iter (fun x -> (printf "%i " x)) expected
+
+        printfn ""
+
+        printf "Actual list: "
+        iter (fun x -> (printf "%i " x)) actual
+
+        // Assert
+        assertEquals expected actual
+
+    [<Test>]
+    member this.``Test: 'mapMany'. Returned maped list.``() =
+
+        // Arrange
+        let initial = List.Node(List.Node(1, List.Node(2, List.Node(3, List.Empty))), List.Node(List.Node(4, List.Node(5, List.Node(6, List.Empty))),List.Empty))
+        let expected = List.Node(1, List.Node(2, List.Node(3, List.Node(4, List.Node(5, List.Node(6, List.Empty))))))
+        
+        // Act
+        let actual = mapMany (fun x -> x) initial
+
+        //printf "Initial list: "
+        //iter (fun x -> (printf "%i " x)) initial
+
+        printfn ""
+
+        printf "Expected list: "
+        iter (fun x -> (printf "%i " x)) expected
+
+        printfn ""
+
+        printf "Actual list: "
+        iter (fun x -> (printf "%i " x)) actual
+
+        // Assert
+        assertEquals expected actual
+
+    [<Test>]
+    member this.``Test: 'concat'. If list is EMPTY then return empty list.``() =
+
+        // Arrange
+        let initial1 = List.Empty
+        let initial2 = List.Empty
+        let expected = List.Empty
+        
+        // Act
+        let actual = concat initial1 initial2
+
+        // Assert
+        assertEquals expected actual
+
+    [<Test>]
+    member this.``Test: 'concat'. Returned concated list.``() =
+
+          // Arrange
+        let initial1 = List.Node(1, List.Node(2, List.Empty))
+        let initial2 = List.Node(3, List.Node(4, List.Empty))
+        let expected = List.Node(1, List.Node(2, List.Node(3, List.Node(4, List.Empty))))
+        
+        // Act
+        let actual = concat initial1 initial2
+
+        // Assert
+        assertEquals expected actual
+
+    [<Test>]
+    member this.``Test: 'concat'. First list is Empty. Returned concated list.``() =
+
+          // Arrange
+        let initial1 = List.Empty
+        let initial2 = List.Node(3, List.Node(4, List.Empty))
+        let expected = List.Node(3, List.Node(4, List.Empty))
+        
+        // Act
+        let actual = concat initial1 initial2
+
+        // Assert
+        assertEquals expected actual
+    
+    [<Test>]
+    member this.``Test: 'concat'. Second list is Empty. Returned concated list.``() =
+
+          // Arrange
+        let initial1 = List.Node(1, List.Node(2, List.Empty))
+        let initial2 = List.Empty
+        let expected = List.Node(1, List.Node(2, List.Empty))
+        
+        // Act
+        let actual = concat initial1 initial2
+
+        // Assert
+        assertEquals expected actual
 
     [<Test>]
     member this.``Test: 'selectionSort'. If list is EMPTY then return empty list.``() =

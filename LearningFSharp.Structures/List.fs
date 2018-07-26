@@ -90,9 +90,19 @@ module public ListExt =
         realyReverse list Empty
 
     (* TODO *)
-    (* Select Many*)
     (* Aggregate*)
     (* Average *)
+
+    let rec concat list acc = 
+        match list with 
+        | Empty -> acc
+        | Node(x, tail) -> Node(x, (concat tail acc))
+
+    let rec mapMany transform list =
+        match list with
+        | Empty -> Empty
+        | Node(x, tail) ->
+            concat <| map transform x <| mapMany transform tail
 
     let count predicate list =
         let rec countInternal predicate list acc =
