@@ -1,5 +1,8 @@
-﻿open System
-open LearningFSharp.Games.GuessNumber.ConsoleModule
+﻿// Namespaces
+open System
+
+// Modules
+open LearningFSharp.Utils.ConsoleModule
 
 let rec gameLoop (random:Random) =
     let rec internalGameLoop number =

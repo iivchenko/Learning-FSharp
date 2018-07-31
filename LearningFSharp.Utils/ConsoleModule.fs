@@ -1,4 +1,4 @@
-﻿namespace LearningFSharp.Games.GuessNumber
+﻿namespace LearningFSharp.Utils
 
 open System
 
