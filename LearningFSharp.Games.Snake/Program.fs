@@ -14,6 +14,7 @@ type Direction =
     | Down
     | Left
     | Right
+    | None
 
 type Snake =
     | Head of Position * Direction * Snake
@@ -34,6 +35,34 @@ let rec drawSnake snake drawHead drawBody =
         drawSnake body drawHead drawBody
     | Tail -> ()
 
+let canUpdateDirection direction snake =
+    match snake with
+    | Head({X = px; Y = py}, _, Body({X = bx; Y = by},_)) ->
+        match direction with 
+        | Up -> 
+            match py - 1 = by with
+            | true -> false
+            | false -> true
+        | Down -> 
+            match py + 1 = by with
+            | true -> false
+            | false -> true
+        | Left -> 
+            match px - 1 = bx with
+            | true -> false
+            | false -> true
+        | Right -> 
+            match px + 1 = bx with
+            | true -> false
+            | false -> true
+        | None -> false
+    | _ -> true
+
+let updateDirection direction snake =
+    match snake with
+    | Head(postion, _, tail) ->
+        Head(postion, direction, tail)
+
 // TODO: Apply Direction
 let rec moveSnake (x, y) snake =
     match snake with
@@ -48,15 +77,19 @@ let rec gameLoop snake speed =
 
     let direction = 
         match Console.ReadKey().Key with
-    | ConsoleKey.UpArrow -> (0, -1)
-    | ConsoleKey.DownArrow -> (0, 1)
-    | ConsoleKey.LeftArrow -> (-1, 0)
-    | ConsoleKey.RightArrow -> (1, 0)
-    | _ -> (0, 0)
+        | ConsoleKey.UpArrow -> Up
+        | ConsoleKey.DownArrow -> Down
+        | ConsoleKey.LeftArrow -> Left
+        | ConsoleKey.RightArrow -> Right
+        | _ -> None
 
     drawSnake snake (fun x y -> draw (x, y) ' ') (fun x y -> draw (x, y) ' ')
 
-    let newSnake = snake |> moveSnake direction
+    match canUpdateDirection direction snake with
+    | true -> snake = updateDirection direction snake     
+
+    let snake = if canUpdateDirection direction snake then updateDirection direction snake else snake
+    let snake = snake |> moveSnake
 
     drawSnake newSnake (fun x y -> draw (x, y) '0') (fun x y -> draw (x, y) '*')
     
@@ -71,8 +104,8 @@ let main argv =
     Console.CursorVisible <- false
 
     // TODO:
-    // let snake be a F# list (or mine who knows)    
     // Avoid Snake moving back
+    // Implement async control input
     // Game over if snake it self
     // Game over if snake move away of the screen
     // Create snake with head only
