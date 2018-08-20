@@ -3,17 +3,10 @@ namespace LearningFSharp.Structures.Tests
 open LearningFSharp.Structures
 open LearningFSharp.Structures.ListExt
 open NUnit.Framework
+open FsUnit
 
 [<TestFixture>]
-type ListTests() = 
-
-    let rec assertEquals (expected:List<'T>) (actual:List<'T>) =
-        match expected, actual with 
-        | List.Empty, List.Empty -> ()
-        | List.Node(x, tailExpected), List.Node(y, tailActual) ->
-            assertEquals tailExpected tailActual
-            Assert.That(y, Is.EqualTo(x))
-        | _, _ -> failwith "Different lists size!"
+type ListTests() =
 
     [<Test>]
     member this.``Test: 'Megatest'.``() =
@@ -40,7 +33,7 @@ type ListTests() =
         let actual = value + tail
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: '+'. List<'T> + 'T .``() =
@@ -54,7 +47,7 @@ type ListTests() =
         let actual = head + value
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: '+'. List<'T> + List<'T> .``() =
@@ -68,7 +61,7 @@ type ListTests() =
         let actual = head + tail
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: list creation operators``()=
@@ -76,14 +69,14 @@ type ListTests() =
         let actual = !- 1 -!- 2 -!- 3 -! 4
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'filter'. If list is EMPTY then return empty list.``() =
 
         // Arrange
-        let initial = List.Empty
-        let expected = List.Empty
+        let initial:List<int> = List.Empty
+        let expected:List<int> = List.Empty
 
         // Act
         let actual = filter (fun x -> x % 2 = 0) initial
@@ -102,7 +95,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'filter'. Return filtered list.``() =
@@ -128,14 +121,14 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual       
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'map'. If list is EMPTY then return empty list.``() =
 
         // Arrange
-        let initial = List.Empty
-        let expected = List.Empty
+        let initial:List<int> = List.Empty
+        let expected:List<int> = List.Empty
         
         // Act
         let actual = map (fun x -> x + 1) initial
@@ -154,7 +147,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'map'. Returned maped list.``() =
@@ -180,7 +173,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'first'. If list is EMPTY then return default value.``() =
@@ -206,7 +199,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'first'. Return first element of the sequence.``() =
@@ -232,7 +225,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'first'. Return second element of the sequence.``() =
@@ -258,7 +251,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'first'. Return third element of the sequence.``() =
@@ -284,7 +277,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'last'. If list is EMPTY then return default value.``() =
@@ -310,7 +303,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'last'. Return fourth element of the sequence.``() =
@@ -336,7 +329,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'last'. Return second element of the sequence from the end.``() =
@@ -364,7 +357,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'last'. Return first element of the sequence.``() =
@@ -390,7 +383,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'max'. If list is EMPTY then return default value.``() =
@@ -416,7 +409,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'max'. Return first element of the sequence.``() =
@@ -442,7 +435,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'max'. Return second element of the sequence.``() =
@@ -469,7 +462,7 @@ type ListTests() =
         printf "%i" actual
 
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'max'. Return last element of the sequence.``() =
@@ -495,7 +488,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'min'. If list is EMPTY then return default value.``() =
@@ -521,7 +514,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'min'. Return first element of the sequence.``() =
@@ -547,7 +540,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'min'. Return second element of the sequence.``() =
@@ -575,7 +568,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'min'. Return last element of the sequence.``() =
@@ -601,7 +594,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'all'. If list is EMPTY then return true.``() =
@@ -627,7 +620,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'all'. All elemets satisfy predicate then return true.``() =
@@ -653,7 +646,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'all'. All elemets not satisfy predicate then return false.``() =
@@ -679,7 +672,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'all'. One elemets not satisfy predicate then return false.``() =
@@ -705,7 +698,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'any'. If list is EMPTY then return false.``() =
@@ -731,7 +724,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'any'. All elemets satisfy predicate then return true.``() =
@@ -757,7 +750,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'any'. All elemets not satisfy predicate then return false.``() =
@@ -783,7 +776,7 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'any'. One elemet satisfy predicate then return true.``() =
@@ -809,14 +802,14 @@ type ListTests() =
         printf "%b" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'reverse'. If list is EMPTY then return empty list.``() =
 
         // Arrange
-        let initial = List.Empty
-        let expected = List.Empty
+        let initial:List<int> = List.Empty
+        let expected:List<int> = List.Empty
 
         // Act
         let actual = reverse initial
@@ -835,7 +828,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'reverse'. Return reversed list.``() =
@@ -861,7 +854,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual       
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'count'. If list is EMPTY then return zero.``() =
@@ -887,7 +880,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'count'. Return count of all list.``() =
@@ -913,7 +906,7 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'count'. Return count by predicate.``() =
@@ -939,14 +932,14 @@ type ListTests() =
         printf "%i" actual
         
         // Assert
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'mapMany'. If list is EMPTY then return empty list.``() =
 
         // Arrange
         let initial = List.Empty
-        let expected = List.Empty
+        let expected:List<int> = List.Empty
         
         // Act
         let actual = mapMany (fun x -> x + 1) initial
@@ -965,7 +958,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'mapMany'. Returned maped list.``() =
@@ -991,7 +984,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'concat'. If list is EMPTY then return empty list.``() =
@@ -1005,7 +998,7 @@ type ListTests() =
         let actual = concat initial1 initial2
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'concat'. Returned concated list.``() =
@@ -1019,7 +1012,7 @@ type ListTests() =
         let actual = concat initial1 initial2
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'concat'. First list is Empty. Returned concated list.``() =
@@ -1033,7 +1026,7 @@ type ListTests() =
         let actual = concat initial1 initial2
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
     
     [<Test>]
     member this.``Test: 'concat'. Second list is Empty. Returned concated list.``() =
@@ -1047,14 +1040,14 @@ type ListTests() =
         let actual = concat initial1 initial2
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'selectionSort'. If list is EMPTY then return empty list.``() =
 
         // Arrange
-        let initial = List.Empty
-        let expected = List.Empty
+        let initial:List<int> = List.Empty
+        let expected:List<int> = List.Empty
         
         // Act
         let actual = selectionSort (fun x y -> if x > y then 1 else -1) initial
@@ -1073,7 +1066,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: 'selectionSort'. Return selected list.``() =
@@ -1099,7 +1092,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
         // Assert
-        assertEquals expected actual
+        actual |> should equal expected
 
     // TODO: Finish
     [<Test>]

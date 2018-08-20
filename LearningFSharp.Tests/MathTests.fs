@@ -1,7 +1,9 @@
 namespace LearningFSharp.Tests
 
+open FsUnit
 open NUnit.Framework
 open LearningFSharp.Math
+
 
 [<TestFixture>]
 type MathTests() =
@@ -12,7 +14,7 @@ type MathTests() =
         let expected = 15
         let actual = !5
 
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: '!='. Operands are equals then return false.``()=
@@ -20,7 +22,7 @@ type MathTests() =
         let expected = false
         let actual = 5 != 5
 
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected
 
     [<Test>]
     member this.``Test: '!='. Operands are not equals the return true.``()=
@@ -28,4 +30,4 @@ type MathTests() =
         let expected = true
         let actual = 5 != 4
 
-        Assert.That(actual, Is.EqualTo(expected))
+        actual |> should equal expected

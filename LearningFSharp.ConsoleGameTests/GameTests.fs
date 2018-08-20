@@ -2,6 +2,7 @@
 // TODO: Read https://fsharpforfunandprofit.com/posts/function-signatures/
 namespace LearningFSharp.ConsoleGameTests
 
+open FsUnit
 open NUnit.Framework
 open LearningFSharp.ConsoleGame
 open System.Threading.Tasks
