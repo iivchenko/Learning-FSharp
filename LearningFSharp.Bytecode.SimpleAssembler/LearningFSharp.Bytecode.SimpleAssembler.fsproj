@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>asm</AssemblyName>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
@@ -10,9 +11,14 @@
     <Compile Include="Commands.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\LearningFSharp.Bytecode\LearningFSharp.Bytecode.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.5.2" />
+    <PackageReference Include="FSharp.CommandLine" Version="2.2.6831.16169" />
   </ItemGroup>
 
 </Project>
