@@ -28,22 +28,42 @@ module public ListExt =
             action head
             iter action tail
 
-    let rec filter predicate list =
-        match list with
-        | Empty -> Empty
-        | Node(head, tail) when predicate head -> (Node(head, filter predicate tail)) 
-        | Node(_, tail) -> filter predicate tail
+    let filter predicate list =
+        let rec filterIn predicate list acc =
+            match list with
+            | Empty -> acc
+            | Node(head, tail) when predicate head -> filterIn predicate tail <| Node(head, acc)
+            | Node(_, tail) -> filterIn predicate tail acc
+        filterIn predicate list Empty
+
+    //let rec map transform list =
+    //    let rec mapIn transform list acc =
+    //        match list with
+    //        | Empty -> acc
+    //        | Node(head, tail) ->
+    //            mapIn transform tail <| Node(transform head, acc)
+    //    mapIn transform list Empty
+
+    //let rec map transform list =
+    //    let rec mapIn transform list cont =
+    //        match list with
+    //        | Empty -> cont()
+    //        | Node(head, tail) ->
+    //            mapIn transform tail <| (fun () -> Node(transform head, cont()))
+    //    mapIn transform list (fun () -> Empty)
 
     let rec map transform list =
-        match list with
-        | Empty -> Empty
-        | Node(head, tail) ->
-            Node(transform head, map transform tail)
+        let rec mapIn transform list acc =
+            match list with
+            | Empty -> acc
+            | Node(head, tail) ->
+                mapIn transform tail <| Node(transform head, acc)
+        mapIn transform list Empty
 
     let rec first predicate list =
         match list with
         | Empty -> Unchecked.defaultof<'T>
-        | Node(head, tail) when predicate head -> head
+        | Node(head, _) when predicate head -> head
         | Node(_, tail) -> first predicate tail
 
     let last predicate list =

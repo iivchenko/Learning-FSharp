@@ -8,8 +8,19 @@ open FsUnit
 [<TestFixture>]
 type ListTests() =
 
+    [<Literal>]
+    let stackItems = 20000 // Actualy it is enough 10000 items fro StackOverflow
+
+    let rec create count (list:List<'a>) acc =
+        if acc = count then list else create count (acc + list) (acc + 1)
+
+    let rec countList list acc =
+        match list with
+        | List.Empty -> acc
+        | List.Node(_, tail) -> countList tail (acc + 1)
+
     [<Test>]
-    member this.``Test: 'Megatest'.``() =
+    member this.``Test: 'Megatest'. Test some methods.``() =
         let initial = !! 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10
 
         let actual = 
@@ -101,8 +112,8 @@ type ListTests() =
     member this.``Test: 'filter'. Return filtered list.``() =
 
         // Arrange
-        let initial = List.Node(1, List.Node(2, List.Node(3, List.Node(4, List.Empty))))
-        let expected = List.Node(2, List.Node(4, List.Empty))
+        let initial = List.Node(1, List.Node(2, List.Node(3, List.Node(4, List.Node(5, List.Node(6, List.Empty))))))
+        let expected = List.Node(2, List.Node(4, List.Node(6, List.Empty)))
         
         // Act
         let actual = filter (fun x -> x % 2 = 0) initial
@@ -122,6 +133,15 @@ type ListTests() =
 
         // Assert
         actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'filter'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let count = countList (list |> filter (fun x -> x % 2 = 0)) 0 
+        printfn "%i" <| count
 
     [<Test>]
     member this.``Test: 'map'. If list is EMPTY then return empty list.``() =
@@ -174,6 +194,15 @@ type ListTests() =
 
         // Assert
         actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'map'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let count = countList (list |> map (fun x -> x)) 0 
+        printfn "%i" <| count
 
     [<Test>]
     member this.``Test: 'first'. If list is EMPTY then return default value.``() =
