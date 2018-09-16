@@ -1,11 +1,17 @@
 ﻿namespace LearningFSharp.Bytecode
+    open System
+
+    type StackItem =
+        | IntItem of Int32
+        | FloatItem of Single
+        | StringItem of String
 
     type IStack =
-        abstract Push : int -> unit
-        abstract Pop : unit -> int
+        abstract Push : StackItem -> unit
+        abstract Pop : unit -> StackItem
 
     type Stack =
-        val mutable _stack : int list
+        val mutable _stack : StackItem list
 
         new() = { _stack = [] } 
 
