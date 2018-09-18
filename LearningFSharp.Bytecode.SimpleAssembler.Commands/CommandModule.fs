@@ -1,6 +1,7 @@
 ﻿module LearningFSharp.Bytecode.SimpleAssembler.CommandModule
     open System
     open LearningFSharp.Bytecode
+    open System.Text.RegularExpressions
     
     type System.String with 
         member this.IsCommand (command : string) = 
@@ -9,6 +10,12 @@
     let (|Int|_|) (value:string) = 
         match Int32.TryParse(value) with
         | true, result -> Some (result)
+        | _ -> None
+
+    let (|String|_|) (value:string) = 
+        // TODO: Think about providers when I will study it
+        match Regex.Match(value, "^\"(?<str>[\s\S]*)\"$") with
+        | m when m.Success -> Some m.Groups.["str"].Value
         | _ -> None
 
     let (|Float|_|) (value:string) = 
@@ -20,7 +27,8 @@
          match value with 
             | Int x -> stack.Push (IntItem x)
             | Float x-> stack.Push (FloatItem x)
-            | x -> stack.Push (StringItem (x.ToString()))
+            | String x -> stack.Push (StringItem (x))
+            | x -> failwith ("There no converter for the '" + x + "' value!")
     
     //let applyUnary (stack : IStack) action = 
     //    match stack.Pop() with

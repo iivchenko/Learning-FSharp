@@ -5,17 +5,17 @@ open LearningFSharp.Bytecode
 open CommandModule
 
 type InitializeCommand(stack : IStack) =
-    interface ICommand with            
+    interface ICommand with
         member this.CanExecute (code : string) =
-            code.IsCommand "INIT"            
+            code.IsCommand "INIT"
 
         member this.Execute (code : string) =
             code.Substring("INIT ".Length) |> push stack 
 
 type AddCommand(stack : IStack) =
-    interface ICommand with            
+    interface ICommand with
         member this.CanExecute (code : string) =
-            code.IsCommand "ADD"            
+            code.IsCommand "ADD"
 
         member this.Execute (code : string) =
             //applyBinary stack (+)

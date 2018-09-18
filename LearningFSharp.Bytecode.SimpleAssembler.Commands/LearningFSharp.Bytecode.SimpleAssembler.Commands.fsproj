@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="CommandModule.fs" />
+    <Compile Include="Commands.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LearningFSharp.Bytecode\LearningFSharp.Bytecode.fsproj" />
+  </ItemGroup>
+
+</Project>
