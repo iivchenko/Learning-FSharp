@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LearningFSharp.Bytecode.SmallAssembler\LearningFSharp.Bytecode.SmallAssembler.fsproj" />
+    <ProjectReference Include="..\LearningFSharp.Bytecode\LearningFSharp.Bytecode.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.5.2" />
+    <PackageReference Include="FSharp.CommandLine" Version="2.2.6831.16169" />
+  </ItemGroup>
+
+</Project>
