@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <AssemblyName>asm</AssemblyName>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
