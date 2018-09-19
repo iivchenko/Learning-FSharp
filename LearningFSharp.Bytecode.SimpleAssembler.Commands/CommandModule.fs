@@ -14,8 +14,8 @@
 
     let (|String|_|) (value:string) = 
         // TODO: Think about providers when I will study it
-        match Regex.Match(value, "^\"(?<str>[\s\S]*)\"$") with
-        | m when m.Success -> Some m.Groups.["str"].Value
+        match Regex.Match(value, "^\"(?<body>[\s\S]*)\"$") with
+        | m when m.Success -> Some m.Groups.["body"].Value
         | _ -> None
 
     let (|Float|_|) (value:string) = 
