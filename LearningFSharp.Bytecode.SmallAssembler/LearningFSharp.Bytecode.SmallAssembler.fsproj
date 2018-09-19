@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LearningFSharp.Bytecode\LearningFSharp.Bytecode.fsproj" />
+    <ProjectReference Include="..\LearningFSharp\LearningFSharp.fsproj" />
   </ItemGroup>
 
 </Project>

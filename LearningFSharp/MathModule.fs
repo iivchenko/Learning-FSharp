@@ -1,6 +1,6 @@
 ﻿namespace LearningFSharp
 
-module public Math =
+module public MathModule =
     
     (* Factorial function *)
     let rec (!) x =

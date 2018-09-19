@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="MathTests.fs" />
+    <Compile Include="ConvertModuleTests.fs" />
+    <Compile Include="MathModuleTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

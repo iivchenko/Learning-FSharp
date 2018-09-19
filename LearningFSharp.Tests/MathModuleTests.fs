@@ -2,11 +2,11 @@ namespace LearningFSharp.Tests
 
 open FsUnit
 open NUnit.Framework
-open LearningFSharp.Math
+open LearningFSharp.MathModule
 
 
 [<TestFixture>]
-type MathTests() =
+type MathModuleTests() =
 
     [<Test>]
     member this.``Test: '!'.``()=

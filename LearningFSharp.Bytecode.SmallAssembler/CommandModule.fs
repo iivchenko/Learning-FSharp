@@ -1,33 +1,18 @@
 ﻿module LearningFSharp.Bytecode.SmallAssembler.CommandModule
+    
     open System
-    open LearningFSharp.Bytecode
-    open System.Text.RegularExpressions
+    open LearningFSharp.ConvertModule
+    open LearningFSharp.Bytecode    
     
     type System.String with 
         member this.IsCommand (command : string) = 
             this.StartsWith(command, StringComparison.OrdinalIgnoreCase)
 
-    let (|Int|_|) (value:string) = 
-        match Int32.TryParse(value) with
-        | true, result -> Some (result)
-        | _ -> None
-
-    let (|String|_|) (value:string) = 
-        // TODO: Think about providers when I will study it
-        match Regex.Match(value, "^\"(?<body>[\s\S]*)\"$") with
-        | m when m.Success -> Some m.Groups.["body"].Value
-        | _ -> None
-
-    let (|Float|_|) (value:string) = 
-        match Single.TryParse(value) with
-        | true, result -> Some (result)
-        | _ -> None
-
     let push (stack : IStack) value =
          match value with 
-            | Int x -> stack.Push (IntItem x)
-            | Float x-> stack.Push (FloatItem x)
-            | String x -> stack.Push (StringItem (x))
+            | TryInt x -> stack.Push (IntItem x)
+            | TryFloat x-> stack.Push (FloatItem x)
+            | TryString x -> stack.Push (StringItem (x))
             | x -> failwith ("There no converter for the '" + x + "' value!")
     
     //let applyUnary (stack : IStack) action = 
