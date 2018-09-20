@@ -2,7 +2,9 @@
     
     open System
     open LearningFSharp.ConvertModule
-    open LearningFSharp.Bytecode    
+    open LearningFSharp.Bytecode
+    open LearningFSharp.TypeModule
+    open System.Text.RegularExpressions
     
     type System.String with 
         member this.IsCommand (command : string) = 
@@ -10,10 +12,25 @@
 
     let push (stack : IStack) value =
          match value with 
-            | TryInt x -> stack.Push (IntItem x)
-            | TryFloat x-> stack.Push (FloatItem x)
-            | TryString x -> stack.Push (StringItem (x))
+            | TryInt x -> stack.Push (Int x)
+            | TryFloat x-> stack.Push (Float x)
+            | TryString x -> stack.Push (String x)
             | x -> failwith ("There no converter for the '" + x + "' value!")
+
+    let (|Command|_|) (command:string) =
+        let pattern = sprintf "(.+ (?<param1>.+)\s{0,1}(?<param2>.+))" // TODO: Improve!
+        let m = Regex.Match(command, pattern)
+
+        match m with 
+        | m when m.Success ->
+            match m.Groups with
+            | groups when groups.["0"].Success && groups.["param1"].Success &&  groups.["param2"].Success ->            
+                Some (Some m.Groups.["param1"].Value, Some m.Groups.["param2"].Value)
+            | groups when  groups.["0"].Success && groups.["param1"].Success ->
+                Some (Some m.Groups.["param1"].Value, None)
+            | groups when groups.["0"].Success -> Some (None, None)
+            | _ -> None
+        | _ -> failwith "FUCN"
     
     //let applyUnary (stack : IStack) action = 
     //    match stack.Pop() with

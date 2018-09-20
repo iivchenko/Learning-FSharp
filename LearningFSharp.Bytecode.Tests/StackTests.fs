@@ -1,9 +1,10 @@
 ﻿namespace LearningFSharp.Bytecode.Tests
 
-open System
-open NUnit.Framework
 open FsUnit
 open LearningFSharp.Bytecode
+open LearningFSharp.TypeModule
+open NUnit.Framework
+open System
 
 [<TestFixture>]
 type StackTests() =
@@ -12,7 +13,7 @@ type StackTests() =
     member this.``Push & Pop. Stack is empty; Add one item. One item in the stack.``() =
         
         // Arrange 
-        let expected = IntItem 777
+        let expected = Int 777
         let stack = new Stack() :> IStack
         
         // Act
@@ -26,8 +27,8 @@ type StackTests() =
     member this.``Push & Pop. Stack has one item; Add one item. Two items in the stack.``() =
          
         // Arrange 
-        let expected1 = IntItem 777
-        let expected2 = IntItem 888
+        let expected1 = Int 777
+        let expected2 = Int 888
         let stack = new Stack() :> IStack
         
         // Act

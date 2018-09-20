@@ -10,4 +10,8 @@
     <Compile Include="Stack.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LearningFSharp\LearningFSharp.fsproj" />
+  </ItemGroup>
+
 </Project>

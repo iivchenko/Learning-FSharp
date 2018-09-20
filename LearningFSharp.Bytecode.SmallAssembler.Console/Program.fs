@@ -23,7 +23,8 @@ let executeCommand () =
         let stack = new Stack() :> IStack
         let commands = 
             [
-                (new InitializeCommand(stack) :> ICommand);
+                (new PushCommand(stack) :> ICommand);
+                (new PopCommand(stack) :> ICommand);
                 (new PrintCommand(stack) :> ICommand);
                 (new AddCommand(stack) :> ICommand);
                 (new SubstractCommand(stack) :> ICommand);

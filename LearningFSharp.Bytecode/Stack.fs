@@ -1,17 +1,14 @@
 ﻿namespace LearningFSharp.Bytecode
-    open System
-
-    type StackItem =
-        | IntItem of Int32
-        | FloatItem of Single
-        | StringItem of String
+    
+    open LearningFSharp.TypeModule
 
     type IStack =
-        abstract Push : StackItem -> unit
-        abstract Pop : unit -> StackItem
+        abstract Push : Value -> unit
+        abstract Pop : unit -> Value
+        abstract IsEmpty : bool with get
 
     type Stack =
-        val mutable _stack : StackItem list
+        val mutable _stack : Value list
 
         new() = { _stack = [] } 
 
@@ -25,4 +22,6 @@
                 | head::tail -> 
                     this._stack <- tail
                     head
+
+            override this.IsEmpty with get () = this._stack.IsEmpty
 

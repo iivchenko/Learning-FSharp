@@ -2,15 +2,24 @@
 
 open System
 open LearningFSharp.Bytecode
+open LearningFSharp.TypeModule
 open CommandModule
 
-type InitializeCommand(stack : IStack) =
+type PushCommand(stack : IStack) =
     interface ICommand with
         member this.CanExecute (code : string) =
-            code.IsCommand "INIT"
+            code.IsCommand "PUSH"
 
         member this.Execute (code : string) =
-            code.Substring("INIT ".Length) |> push stack 
+            code.Substring("PUSH ".Length) |> push stack 
+
+type PopCommand(stack : IStack) =
+    interface ICommand with
+        member this.CanExecute (code : string) =
+            code.IsCommand "POP"
+
+        member this.Execute (code : string) =
+            stack.Pop() |> ignore
 
 type AddCommand(stack : IStack) =
     interface ICommand with
@@ -20,10 +29,24 @@ type AddCommand(stack : IStack) =
         member this.Execute (code : string) =
             //applyBinary stack (+)
 
+            match code.Trim() with 
+            | Command (None, None) -> ()
+            | Command (Some param1, None) ->
+                push stack param1
+            | Command (Some param1, Some param2) ->
+                push stack param1
+                push stack param2
+
             match stack.Pop(), stack.Pop() with
-            | IntItem value1, IntItem value2 -> stack.Push <| IntItem (value1 + value2)
-            | FloatItem value1, FloatItem value2 -> stack.Push <| FloatItem (value1 + value2)
-            | StringItem value1, StringItem value2 -> stack.Push <| StringItem (String.Format("{0}{1}", value1, value2)) 
+            | Int value1, Int value2 -> stack.Push <| Int (value1 + value2)
+            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) + value2)
+            | Int value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
+            | Float value1, Float value2 -> stack.Push <| Float (value1 + value2)
+            | Float value1, Int value2 -> stack.Push <| Float (value1 + (float32 value2))
+            | Float value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
+            | String value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
+            | String value1, Int value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
+            | String value1, Float value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
 
 type SubstractCommand(stack : IStack) =
     interface ICommand with 
@@ -34,9 +57,11 @@ type SubstractCommand(stack : IStack) =
             //applyBinary stack (-)
 
             match stack.Pop(), stack.Pop() with
-            | IntItem value1, IntItem value2 -> stack.Push <| IntItem (value1 - value2)
-            | FloatItem value1, FloatItem value2 -> stack.Push <| FloatItem (value1 - value2)
-            | StringItem value1, StringItem value2 -> stack.Push <| StringItem (String.Format("{0}{1}", value1, value2)) 
+            | Int value1, Int value2 -> stack.Push <| Int (value1 - value2)
+            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) - value2)
+            | Float value1, Float value2 -> stack.Push <| Float (value1 - value2)
+            | Float value1, Int value2 -> stack.Push <| Float (value1 - (float32 value2))
+            | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
 type MultiplyCommand(stack : IStack) =
     interface ICommand with 
@@ -46,10 +71,12 @@ type MultiplyCommand(stack : IStack) =
         member this.Execute (code : string) =
             //applyBinary stack (*)
 
-            match stack.Pop(), stack.Pop() with
-            | IntItem value1, IntItem value2 -> stack.Push <| IntItem (value1 * value2)
-            | FloatItem value1, FloatItem value2 -> stack.Push <| FloatItem (value1 * value2)
-            | StringItem value1, StringItem value2 -> stack.Push <| StringItem (String.Format("{0}{1}", value1, value2)) 
+             match stack.Pop(), stack.Pop() with
+            | Int value1, Int value2 -> stack.Push <| Int (value1 * value2)
+            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) * value2)
+            | Float value1, Float value2 -> stack.Push <| Float (value1 * value2)
+            | Float value1, Int value2 -> stack.Push <| Float (value1 * (float32 value2))
+            | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
 type DivideCommand(stack : IStack) = 
     interface ICommand with 
@@ -60,9 +87,11 @@ type DivideCommand(stack : IStack) =
             //applyBinary stack (/)
 
             match stack.Pop(), stack.Pop() with
-            | IntItem value1, IntItem value2 -> stack.Push <| IntItem (value1 / value2)
-            | FloatItem value1, FloatItem value2 -> stack.Push <| FloatItem (value1 / value2)
-            | StringItem value1, StringItem value2 -> stack.Push <| StringItem (String.Format("{0}{1}", value1, value2)) 
+            | Int value1, Int value2 -> stack.Push <| Int (value1 / value2)
+            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) / value2)
+            | Float value1, Float value2 -> stack.Push <| Float (value1 / value2)
+            | Float value1, Int value2 -> stack.Push <| Float (value1 - (float32 value2))
+            | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
 type PrintCommand(stack : IStack) = 
     interface ICommand with 
@@ -71,6 +100,6 @@ type PrintCommand(stack : IStack) =
 
         member this.Execute (code : string) =
             match stack.Pop() with
-            | IntItem value1 -> printf "%i" value1
-            | FloatItem value1 -> printf "%f" value1
-            | StringItem value1 -> printf "%s" value1 
+            | Int value -> printf "%i" value
+            | Float value -> printf "%f" value
+            | String value -> printf "%s" value
