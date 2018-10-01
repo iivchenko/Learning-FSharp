@@ -11,7 +11,14 @@ type PushCommand(stack : IStack) =
             code.IsCommand "PUSH"
 
         member this.Execute (code : string) =
-            code.Substring("PUSH ".Length) |> push stack 
+
+            match code.Trim() with 
+            | Command { Name = _; Param1 = None ; Param2 = None }
+            | Command { Name = _; Param1 = Some _; Param2 = Some _ } ->
+                failwith "Push Command should always have one parameter!"
+            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+                push stack param1
+            | _ -> failwith <| "Can't resolve command '" + code + "'"
 
 type PopCommand(stack : IStack) =
     interface ICommand with
@@ -19,7 +26,13 @@ type PopCommand(stack : IStack) =
             code.IsCommand "POP"
 
         member this.Execute (code : string) =
-            stack.Pop() |> ignore
+            match code.Trim() with 
+            | Command { Name = _; Param1 = None ; Param2 = None } ->
+                stack.Pop() |> ignore            
+            | Command { Name = _; Param1 = Some _; Param2 = None }
+            | Command { Name = _; Param1 = Some _; Param2 = Some _ } ->
+                failwith "Pop Command should not have parameters!"
+            | _ -> failwith <| "Can't resolve command '" + code + "'"
 
 type AddCommand(stack : IStack) =
     interface ICommand with
@@ -30,23 +43,24 @@ type AddCommand(stack : IStack) =
             //applyBinary stack (+)
 
             match code.Trim() with 
-            | Command (None, None) -> ()
-            | Command (Some param1, None) ->
+            | Command { Name = _; Param1 = None ; Param2 = None } -> ()
+            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
                 push stack param1
-            | Command (Some param1, Some param2) ->
-                push stack param1
+            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
                 push stack param2
+                push stack param1
+            | _ -> failwith <| "Can't resolve command '" + code + "'"
 
             match stack.Pop(), stack.Pop() with
             | Int value1, Int value2 -> stack.Push <| Int (value1 + value2)
-            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) + value2)
+            | Int value1, Double value2 -> stack.Push <| Double ((double value1) + value2)
             | Int value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
-            | Float value1, Float value2 -> stack.Push <| Float (value1 + value2)
-            | Float value1, Int value2 -> stack.Push <| Float (value1 + (float32 value2))
-            | Float value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
+            | Double value1, Double value2 -> stack.Push <| Double (value1 + value2)
+            | Double value1, Int value2 -> stack.Push <| Double (value1 + (double value2))
+            | Double value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
             | String value1, String value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
             | String value1, Int value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
-            | String value1, Float value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
+            | String value1, Double value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
 
 type SubstractCommand(stack : IStack) =
     interface ICommand with 
@@ -56,11 +70,20 @@ type SubstractCommand(stack : IStack) =
         member this.Execute (code : string) =
             //applyBinary stack (-)
 
+            match code.Trim() with 
+            | Command { Name = _; Param1 = None; Param2 = None } -> ()
+            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+                push stack param1
+            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+                push stack param2
+                push stack param1
+            | _ -> failwith <| "Can't resolve command '" + code + "'"
+
             match stack.Pop(), stack.Pop() with
             | Int value1, Int value2 -> stack.Push <| Int (value1 - value2)
-            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) - value2)
-            | Float value1, Float value2 -> stack.Push <| Float (value1 - value2)
-            | Float value1, Int value2 -> stack.Push <| Float (value1 - (float32 value2))
+            | Int value1, Double value2 -> stack.Push <| Double ((double value1) - value2)
+            | Double value1, Double value2 -> stack.Push <| Double (value1 - value2)
+            | Double value1, Int value2 -> stack.Push <| Double (value1 - (double value2))
             | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
 type MultiplyCommand(stack : IStack) =
@@ -71,11 +94,20 @@ type MultiplyCommand(stack : IStack) =
         member this.Execute (code : string) =
             //applyBinary stack (*)
 
-             match stack.Pop(), stack.Pop() with
+            match code.Trim() with 
+            | Command { Name = _; Param1 = None; Param2 = None } -> ()
+            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+                push stack param1
+            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+                push stack param2
+                push stack param1
+            | _ -> failwith <| "Can't resolve command '" + code + "'"
+
+            match stack.Pop(), stack.Pop() with
             | Int value1, Int value2 -> stack.Push <| Int (value1 * value2)
-            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) * value2)
-            | Float value1, Float value2 -> stack.Push <| Float (value1 * value2)
-            | Float value1, Int value2 -> stack.Push <| Float (value1 * (float32 value2))
+            | Int value1, Double value2 -> stack.Push <| Double ((double value1) * value2)
+            | Double value1, Double value2 -> stack.Push <| Double (value1 * value2)
+            | Double value1, Int value2 -> stack.Push <| Double (value1 * (double value2))
             | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
 type DivideCommand(stack : IStack) = 
@@ -85,12 +117,21 @@ type DivideCommand(stack : IStack) =
 
         member this.Execute (code : string) = 
             //applyBinary stack (/)
+            
+            match code.Trim() with 
+            | Command { Name = _; Param1 = None; Param2 = None } -> ()
+            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+                push stack param1
+            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+                push stack param2
+                push stack param1
+            | _ -> failwith <| "Can't resolve command '" + code + "'"
 
             match stack.Pop(), stack.Pop() with
             | Int value1, Int value2 -> stack.Push <| Int (value1 / value2)
-            | Int value1, Float value2 -> stack.Push <| Float ((float32 value1) / value2)
-            | Float value1, Float value2 -> stack.Push <| Float (value1 / value2)
-            | Float value1, Int value2 -> stack.Push <| Float (value1 - (float32 value2))
+            | Int value1, Double value2 -> stack.Push <| Double ((double value1) / value2)
+            | Double value1, Double value2 -> stack.Push <| Double (value1 / value2)
+            | Double value1, Int value2 -> stack.Push <| Double (value1 - (double value2))
             | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
 type PrintCommand(stack : IStack) = 
@@ -101,5 +142,5 @@ type PrintCommand(stack : IStack) =
         member this.Execute (code : string) =
             match stack.Pop() with
             | Int value -> printf "%i" value
-            | Float value -> printf "%f" value
+            | Double value -> printf "%f" value
             | String value -> printf "%s" value

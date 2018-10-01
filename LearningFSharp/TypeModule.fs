@@ -4,7 +4,7 @@ open System
 
 type Value =
     | Int of Int32
-    | Float of Single
+    | Double of Double
     | String of String
 
 

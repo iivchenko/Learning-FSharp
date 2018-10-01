@@ -14,7 +14,7 @@
         | m when m.Success -> Some m.Groups.["body"].Value
         | _ -> None
 
-    let (|TryFloat|_|) (value:string) = 
-        match Single.TryParse(value) with
+    let (|TryDouble|_|) (value:string) = 
+        match Double.TryParse(value) with
         | true, result -> Some (result)
         | _ -> None

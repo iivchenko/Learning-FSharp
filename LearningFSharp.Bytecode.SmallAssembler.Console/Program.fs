@@ -18,7 +18,7 @@ let executeCommand () =
   command {
     name "execute"
     description "Execute script"    
-    opt file in fileOption |> CommandOption.zeroOrExactlyOne    
+    opt file in fileOption |> CommandOption.zeroOrExactlyOne
     do 
         let stack = new Stack() :> IStack
         let commands = 
@@ -43,4 +43,4 @@ let executeCommand () =
 
 [<EntryPoint>]
 let main argv =
-    executeCommand() |> Command.runAsEntryPoint argv  
+    executeCommand() |> Command.runAsEntryPoint argv

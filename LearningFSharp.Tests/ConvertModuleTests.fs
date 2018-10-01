@@ -3,6 +3,8 @@
 open FsUnit
 open NUnit.Framework
 open LearningFSharp.ConvertModule
+open System.Text.RegularExpressions
+open System
 
 [<TestFixture>]
 type ConvertModuleTests() =
@@ -30,7 +32,7 @@ type ConvertModuleTests() =
     [<TestCase("")>]
     member this.``TryFloat. Bad input. None``(input : string) =
         match input with 
-        | TryFloat _-> failwith <| "Input '" + input + "' should be BAD!"             
+        | TryDouble _-> failwith <| "Input '" + input + "' should be BAD!"
         | _ -> ()
 
     [<TestCase("0", 0)>]
@@ -44,7 +46,7 @@ type ConvertModuleTests() =
     [<TestCase("666.1", 666.1f)>]
     member this.``TryFloat. Good input. Some``(input : string, expected : float) =
         match input with 
-        | TryFloat x -> x |> should equal expected
+        | TryDouble x -> x |> should equal expected
         | _ -> failwith <| "Input '" + input + "' should be GOOD!"
             
     [<TestCase("")>]
@@ -52,7 +54,7 @@ type ConvertModuleTests() =
     [<TestCase("Bad")>]
     member this.``TryString. Bad input. None``(input : string) =
         match input with 
-        | TryString _-> failwith <| "Input '" + input + "' should be BAD!"             
+        | TryString _-> failwith <| "Input '" + input + "' should be BAD!"
         | _ -> ()
 
     [<TestCase("\"\"", "")>]
