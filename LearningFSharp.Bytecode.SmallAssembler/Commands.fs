@@ -7,51 +7,69 @@ open CommandModule
 
 [<Command>]
 type PushCommand(stack : IStack) =
+    
+    [<Literal>]
+    let Command = "PUSH"
+
     interface ICommand with
+            
         member this.CanExecute (code : string) =
-            code.IsCommand "PUSH"
+            code.IsCommand Command
 
         member this.Execute (code : string) =
-
+            
             match code.Trim() with 
-            | Command { Name = _; Param1 = None ; Param2 = None }
-            | Command { Name = _; Param1 = Some _; Param2 = Some _ } ->
-                failwith "Push Command should always have one parameter!"
-            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+            | CommandNoParams (Command)
+            | CommandTwoParams (Command, _, _) ->
+                failwith <| Command + " Command should always have one parameter!"
+            | CommandOneParam ("PUSH", param1) ->
                 push stack param1
+            | UndefinedCommand
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
 [<Command>]
 type PopCommand(stack : IStack) =
+    
+    [<Literal>]
+    let Command = "POP"
+
     interface ICommand with
+    
         member this.CanExecute (code : string) =
-            code.IsCommand "POP"
+            code.IsCommand Command
 
         member this.Execute (code : string) =
             match code.Trim() with 
-            | Command { Name = _; Param1 = None ; Param2 = None } ->
+            | CommandNoParams (Command) ->
                 stack.Pop() |> ignore            
-            | Command { Name = _; Param1 = Some _; Param2 = None }
-            | Command { Name = _; Param1 = Some _; Param2 = Some _ } ->
-                failwith "Pop Command should not have parameters!"
+            | CommandOneParam (Command, _) 
+            | CommandTwoParams (Command, _, _) ->
+                failwith <| Command + " Command should not have parameters!"
+            | UndefinedCommand
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
 [<Command>]
 type AddCommand(stack : IStack) =
+    
+    [<Literal>]
+    let Command = "ADD"
+
     interface ICommand with
+
         member this.CanExecute (code : string) =
-            code.IsCommand "ADD"
+            code.IsCommand Command
 
         member this.Execute (code : string) =
             //applyBinary stack (+)
 
             match code.Trim() with 
-            | Command { Name = _; Param1 = None ; Param2 = None } -> ()
-            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+            | CommandNoParams (Command) -> ()
+            | CommandOneParam (Command, param1)  ->
                 push stack param1
-            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+            | CommandTwoParams (Command, param1, param2) ->
                 push stack param2
                 push stack param1
+            | UndefinedCommand
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
             match stack.Pop(), stack.Pop() with
@@ -67,20 +85,26 @@ type AddCommand(stack : IStack) =
 
 [<Command>]
 type SubstractCommand(stack : IStack) =
+    
+    [<Literal>]
+    let Command = "SUB"
+
     interface ICommand with 
+
         member this.CanExecute (code : string) =
-            code.IsCommand "SUB"
+            code.IsCommand Command
 
         member this.Execute (code : string) =
             //applyBinary stack (-)
 
             match code.Trim() with 
-            | Command { Name = _; Param1 = None; Param2 = None } -> ()
-            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+            | CommandNoParams (Command) -> ()
+            | CommandOneParam (Command, param1) ->
                 push stack param1
-            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+            | CommandTwoParams (Command, param1, param2) ->
                 push stack param2
                 push stack param1
+            | UndefinedCommand
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
             match stack.Pop(), stack.Pop() with
@@ -92,20 +116,25 @@ type SubstractCommand(stack : IStack) =
 
 [<Command>]
 type MultiplyCommand(stack : IStack) =
+    
+    [<Literal>]
+    let Command = "MUL"
+
     interface ICommand with 
         member this.CanExecute (code : string) =
-            code.IsCommand "MUL"
+            code.IsCommand Command
 
         member this.Execute (code : string) =
             //applyBinary stack (*)
 
             match code.Trim() with 
-            | Command { Name = _; Param1 = None; Param2 = None } -> ()
-            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+            | CommandNoParams (Command) -> ()
+            | CommandOneParam (Command, param1) ->
                 push stack param1
-            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+            | CommandTwoParams (Command, param1, param2) ->
                 push stack param2
                 push stack param1
+            | UndefinedCommand
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
             match stack.Pop(), stack.Pop() with
@@ -117,20 +146,25 @@ type MultiplyCommand(stack : IStack) =
 
 [<Command>]
 type DivideCommand(stack : IStack) = 
+    
+    [<Literal>]
+    let Command = "DIV"
+
     interface ICommand with 
         member this.CanExecute (code : string) = 
-            code.IsCommand "DIV"
+            code.IsCommand Command
 
         member this.Execute (code : string) = 
             //applyBinary stack (/)
             
             match code.Trim() with 
-            | Command { Name = _; Param1 = None; Param2 = None } -> ()
-            | Command { Name = _; Param1 = Some param1; Param2 = None } ->
+            | CommandNoParams (Command) -> ()
+            | CommandOneParam (Command, param1) ->
                 push stack param1
-            | Command { Name = _; Param1 = Some param1; Param2 = Some param2 } ->
+            | CommandTwoParams (Command, param1, param2) ->
                 push stack param2
                 push stack param1
+            | UndefinedCommand
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
             match stack.Pop(), stack.Pop() with
@@ -142,9 +176,12 @@ type DivideCommand(stack : IStack) =
 
 [<Command>]
 type PrintCommand(stack : IStack) = 
+    [<Literal>]
+    let Command = "PRNT"
+    
     interface ICommand with 
         member this.CanExecute (code : string) =
-            code.IsCommand "PRNT"
+            code.IsCommand Command
 
         member this.Execute (code : string) =
             match stack.Pop() with

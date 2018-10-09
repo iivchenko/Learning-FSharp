@@ -24,37 +24,23 @@
             | TryString x -> stack.Push (String x)
             | x -> failwith ("There no converter for the '" + x + "' value!")
 
-    let (|Command|_|) (command:string) =
+    let (|CommandNoParams|CommandOneParam|CommandTwoParams|UndefinedCommand|) (command:string) =
         let commandPattern = "^(?<command>[A-Za-z]+)$"
         let commandAndOneParamPattern = "^(?<command>[A-Za-z]+) (?<param1>([^,]+|\"[^,]+\"))$" 
         let commandAndTwoParamPattern = "^(?<command>[A-Za-z]+) (?<param1>([^,]+|\"[^,]+\")),(?<param2>([^,]+|\"[^,]+\"))$"
-        
+
         match command with 
         | _ when Regex.IsMatch(command, commandPattern) -> 
             let m = Regex.Match(command, commandPattern)
-
-            Some {
-                Name = m.Groups.["command"].Value;
-                Param1 = None;
-                Param2 = None;
-            }
+            CommandNoParams (m.Groups.["command"].Value.ToUpper())
 
         | _ when Regex.IsMatch(command, commandAndOneParamPattern) ->
             let m = Regex.Match(command, commandAndOneParamPattern)
-
-            Some {
-                Name = m.Groups.["command"].Value;
-                Param1 = Some m.Groups.["param1"].Value;
-                Param2 = None;
-            }
+            CommandOneParam (m.Groups.["command"].Value.ToUpper(), m.Groups.["param1"].Value)
 
         | _ when Regex.IsMatch(command, commandAndTwoParamPattern) ->
             let m = Regex.Match(command, commandAndTwoParamPattern)
 
-            Some {
-                Name = m.Groups.["command"].Value;
-                Param1 = Some m.Groups.["param1"].Value;
-                Param2 = Some m.Groups.["param2"].Value;
-            }
+            CommandTwoParams (m.Groups.["command"].Value.ToUpper(), m.Groups.["param1"].Value, m.Groups.["param2"].Value)
 
-        | _ -> None
+        | _ -> UndefinedCommand

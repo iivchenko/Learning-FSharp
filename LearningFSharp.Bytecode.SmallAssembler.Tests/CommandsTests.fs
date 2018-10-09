@@ -62,7 +62,7 @@ type CommandsTests() =
         let stack = new Stack() :> IStack
         let command = new PushCommand(stack) :> ICommand
         
-        (fun () -> command.Execute("PUSH " + input) |> ignore) |> should (throwWithMessage <| "Push Command should always have one parameter!") typeof<Exception>
+        (fun () -> command.Execute("PUSH " + input) |> ignore) |> should (throwWithMessage <| "PUSH Command should always have one parameter!") typeof<Exception>
 
     [<Test>]
     member this.``PopCommand. One item in stack. Item Removed from stack``() =
@@ -80,7 +80,7 @@ type CommandsTests() =
         let stack = new Stack() :> IStack
         let command = new PopCommand(stack) :> ICommand
 
-        (fun () -> command.Execute("POP " + input) |> ignore) |> should (throwWithMessage <| "Pop Command should not have parameters!") typeof<Exception>
+        (fun () -> command.Execute("POP " + input) |> ignore) |> should (throwWithMessage <| "POP Command should not have parameters!") typeof<Exception>
 
     [<Test>]
     member this.``AddCommand. IntItem without parameters. Success Case``() =
