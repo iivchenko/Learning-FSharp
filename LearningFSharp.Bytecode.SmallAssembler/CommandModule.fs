@@ -10,13 +10,6 @@
         member this.IsCommand (command : string) = 
             this.StartsWith(command, StringComparison.OrdinalIgnoreCase)
 
-    type Command = 
-        { 
-            Name : string; 
-            Param1 : string Option; 
-            Param2 : string Option 
-        }
-
     let push (stack : IStack) value =
          match value with 
             | TryInt x -> stack.Push (Int x)
