@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="CommandAttribute.fs" />
     <Compile Include="CommandModule.fs" />
     <Compile Include="Commands.fs" />
   </ItemGroup>

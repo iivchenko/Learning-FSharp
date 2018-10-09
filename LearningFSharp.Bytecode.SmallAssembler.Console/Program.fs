@@ -4,6 +4,8 @@ open FSharp.CommandLine
 open FSharp.CommandLine.Options
 open FSharp.CommandLine.Commands
 open System.IO
+open System.Reflection
+open System
 
 let fileOption =
   commandOption {
@@ -21,16 +23,15 @@ let executeCommand () =
     opt file in fileOption |> CommandOption.zeroOrExactlyOne
     do 
         let stack = new Stack() :> IStack
+
+        let assembly = typeof<CommandAttribute> |> Assembly.GetAssembly
+
         let commands = 
-            [
-                (new PushCommand(stack) :> ICommand);
-                (new PopCommand(stack) :> ICommand);
-                (new PrintCommand(stack) :> ICommand);
-                (new AddCommand(stack) :> ICommand);
-                (new SubstractCommand(stack) :> ICommand);
-                (new MultiplyCommand(stack) :> ICommand);
-                (new DivideCommand(stack) :> ICommand);
-            ]
+            assembly.GetTypes()
+            |> Array.toList
+            |> List.where (fun x -> x.GetCustomAttribute(typeof<CommandAttribute>) <> null) 
+            |> List.map (fun x -> Activator.CreateInstance(x, stack) :?> ICommand)
+
         let bytecode = new Bytecode(commands)
 
         match file with 

@@ -5,6 +5,7 @@ open LearningFSharp.Bytecode
 open LearningFSharp.TypeModule
 open CommandModule
 
+[<Command>]
 type PushCommand(stack : IStack) =
     interface ICommand with
         member this.CanExecute (code : string) =
@@ -20,6 +21,7 @@ type PushCommand(stack : IStack) =
                 push stack param1
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
+[<Command>]
 type PopCommand(stack : IStack) =
     interface ICommand with
         member this.CanExecute (code : string) =
@@ -34,6 +36,7 @@ type PopCommand(stack : IStack) =
                 failwith "Pop Command should not have parameters!"
             | _ -> failwith <| "Can't resolve command '" + code + "'"
 
+[<Command>]
 type AddCommand(stack : IStack) =
     interface ICommand with
         member this.CanExecute (code : string) =
@@ -62,6 +65,7 @@ type AddCommand(stack : IStack) =
             | String value1, Int value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
             | String value1, Double value2 -> stack.Push <| String (String.Format("{0}{1}", value1, value2))
 
+[<Command>]
 type SubstractCommand(stack : IStack) =
     interface ICommand with 
         member this.CanExecute (code : string) =
@@ -86,6 +90,7 @@ type SubstractCommand(stack : IStack) =
             | Double value1, Int value2 -> stack.Push <| Double (value1 - (double value2))
             | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
+[<Command>]
 type MultiplyCommand(stack : IStack) =
     interface ICommand with 
         member this.CanExecute (code : string) =
@@ -110,6 +115,7 @@ type MultiplyCommand(stack : IStack) =
             | Double value1, Int value2 -> stack.Push <| Double (value1 * (double value2))
             | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
+[<Command>]
 type DivideCommand(stack : IStack) = 
     interface ICommand with 
         member this.CanExecute (code : string) = 
@@ -134,6 +140,7 @@ type DivideCommand(stack : IStack) =
             | Double value1, Int value2 -> stack.Push <| Double (value1 - (double value2))
             | t1, t2 -> failwith <| System.String.Format("Unsupported types: {0}{1}", t1.ToString(), t2.ToString())
 
+[<Command>]
 type PrintCommand(stack : IStack) = 
     interface ICommand with 
         member this.CanExecute (code : string) =
