@@ -1,5 +1,5 @@
 ﻿namespace LearningFSharp.Structures
 
-type Stack<'T> =
+type Stack<'a> =
     | Empty
-    | Node of 'T * Stack<'T>
+    | Node of 'a * Stack<'a>

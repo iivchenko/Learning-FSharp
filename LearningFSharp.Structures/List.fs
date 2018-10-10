@@ -1,8 +1,8 @@
 ﻿namespace LearningFSharp.Structures
 
-type List<'T> =
+type List<'a> =
     | Empty  
-    | Node of 'T * List<'T>
+    | Node of 'a * List<'a>
 
     static member (+) (x, tail) =
         Node(x, tail)
@@ -58,7 +58,7 @@ module public ListExt =
 
     let rec first predicate list =
         match list with
-        | Empty -> Unchecked.defaultof<'T>
+        | Empty -> Unchecked.defaultof<'a>
         | Node(head, _) when predicate head -> head
         | Node(_, tail) -> first predicate tail
 
@@ -68,7 +68,7 @@ module public ListExt =
             | Empty -> acc
             | Node(head, tail) when predicate head -> realyLast predicate tail head
             | Node(_, tail) -> realyLast predicate tail acc
-        realyLast predicate list Unchecked.defaultof<'T>
+        realyLast predicate list Unchecked.defaultof<'a>
 
     let rec all predicate list =
         match list with 
@@ -86,14 +86,14 @@ module public ListExt =
 
     let rec max compare list =
         match list with
-        | Empty -> Unchecked.defaultof<'T>
+        | Empty -> Unchecked.defaultof<'a>
         | Node(x, Empty) -> x
         | Node(x, Node(y, tail)) when compare x y = 1 -> max compare (Node(x, tail))
         | Node(_, Node(y, tail)) -> max compare <| (Node(y, tail))
 
     let rec min compare list =
         match list with
-        | Empty -> Unchecked.defaultof<'T>
+        | Empty -> Unchecked.defaultof<'a>
         | Node(x, Empty) -> x
         | Node(x, Node(y, tail)) when compare x y = -1 -> min compare (Node(x, tail))
         | Node(_, Node(y, tail)) -> min compare <| (Node(y, tail))

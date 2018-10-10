@@ -1,5 +1,5 @@
 ﻿namespace LearningFSharp.Structures
 
-type Tree<'T1> = 
+type Tree<'a> = 
     | Empty
-    | Node of 'T1 * Tree<'T1> * Tree<'T1>
+    | Node of 'a * Tree<'a> * Tree<'a>

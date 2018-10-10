@@ -9,7 +9,7 @@ open FsUnit
 type ListTests() =
 
     [<Literal>]
-    let stackItems = 20000 // Actualy it is enough 10000 items fro StackOverflow
+    let stackItems = 20000 // Actualy it is enough 10000 items for StackOverflow
 
     let rec create count (list:List<'a>) acc =
         if acc = count then list else create count (acc + list) (acc + 1)
@@ -33,7 +33,7 @@ type ListTests() =
         iter (fun x -> (printf "%i " x)) actual
 
     [<Test>]
-    member this.``Test: '+'. 'T + List<'T>.``() =
+    member this.``Test: '+'. 'a + List<'a>.``() =
 
         // Arrange
         let value = 1
@@ -47,7 +47,7 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
-    member this.``Test: '+'. List<'T> + 'T .``() =
+    member this.``Test: '+'. List<'a> + 'a .``() =
 
         // Arrange
         let value = 3
@@ -61,7 +61,7 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
-    member this.``Test: '+'. List<'T> + List<'T> .``() =
+    member this.``Test: '+'. List<'a> + List<'a> .``() =
 
         // Arrange      
         let head = List.Node(1, List.Node(2, List.Empty))
