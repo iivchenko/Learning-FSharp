@@ -35,30 +35,26 @@ module public ListExt =
             | Node(head, tail) when predicate head -> filterIn predicate tail <| Node(head, acc)
             | Node(_, tail) -> filterIn predicate tail acc
         filterIn predicate list Empty
-
-    //let rec map transform list =
-    //    let rec mapIn transform list acc =
-    //        match list with
-    //        | Empty -> acc
-    //        | Node(head, tail) ->
-    //            mapIn transform tail <| Node(transform head, acc)
-    //    mapIn transform list Empty
-
-    //let rec map transform list =
-    //    let rec mapIn transform list cont =
-    //        match list with
-    //        | Empty -> cont()
-    //        | Node(head, tail) ->
-    //            mapIn transform tail <| (fun () -> Node(transform head, cont()))
-    //    mapIn transform list (fun () -> Empty)
-
-    let rec map transform list =
-        let rec mapIn transform list acc =
+        
+    let rec map (transform:'a -> 'a) (list:List<'a>) =
+        let myId (x:List<'a>) = x
+        let cons (x:'a) (list:List<'a>) = Node(x, list)
+        let rec mapIn (transform:'a -> 'a) (list:List<'a>) (acc:List<'a> -> List<'a>) =
             match list with
-            | Empty -> acc
+            | Empty -> acc Empty
             | Node(head, tail) ->
-                mapIn transform tail <| Node(transform head, acc)
-        mapIn transform list Empty
+                let acc2 x y = acc (cons x y)
+                mapIn transform tail (acc2 <| transform head)
+        mapIn transform list myId
+
+    let rec map2 transform list =
+        let cons x list = Node(x, list)
+        let rec mapIn transform acc = 
+            function
+            | Empty -> acc Empty
+            | Node(head, tail) ->
+                mapIn transform (acc << (cons <| transform head)) tail
+        mapIn transform id list
 
     let rec first predicate list =
         match list with

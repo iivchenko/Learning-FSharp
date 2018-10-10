@@ -205,6 +205,67 @@ type ListTests() =
         printfn "%i" <| count
 
     [<Test>]
+    member this.``Test: 'map2'. If list is EMPTY then return empty list.``() =
+
+        // Arrange
+        let initial:List<int> = List.Empty
+        let expected:List<int> = List.Empty
+        
+        // Act
+        let actual = map2 (fun x -> x + 1) initial
+
+        printf "Initial list: "
+        iter (fun x -> (printf "%i " x)) initial
+
+        printfn ""
+
+        printf "Expected list: "
+        iter (fun x -> (printf "%i " x)) expected
+
+        printfn ""
+
+        printf "Actual list: "
+        iter (fun x -> (printf "%i " x)) actual
+
+        // Assert
+        actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'map2'. Returned maped list.``() =
+
+        // Arrange
+        let initial = List.Node(1, List.Node(2, List.Node(3, List.Node(4, List.Empty))))
+        let expected = List.Node(2, List.Node(3, List.Node(4, List.Node(5, List.Empty))))
+        
+        // Act
+        let actual = map2 (fun x -> x + 1) initial
+
+        printf "Initial list: "
+        iter (fun x -> (printf "%i " x)) initial
+
+        printfn ""
+
+        printf "Expected list: "
+        iter (fun x -> (printf "%i " x)) expected
+
+        printfn ""
+
+        printf "Actual list: "
+        iter (fun x -> (printf "%i " x)) actual
+
+        // Assert
+        actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'map2'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let count = countList (list |> map2 (fun x -> x)) 0 
+        printfn "%i" <| count
+
+    [<Test>]
     member this.``Test: 'first'. If list is EMPTY then return default value.``() =
 
         // Arrange
