@@ -21,6 +21,8 @@ type List<'a> =
 
 module public ListExt =
 
+    let private cons x list = Node(x, list)
+
     let rec iter action list  =
         match list with
         | Empty -> ()
@@ -31,10 +33,10 @@ module public ListExt =
     let filter predicate list =
         let rec filterIn predicate list acc =
             match list with
-            | Empty -> acc
-            | Node(head, tail) when predicate head -> filterIn predicate tail <| Node(head, acc)
+            | Empty -> acc Empty
+            | Node(head, tail) when predicate head -> filterIn predicate tail (acc << (cons head))
             | Node(_, tail) -> filterIn predicate tail acc
-        filterIn predicate list Empty
+        filterIn predicate list id
         
     let rec map (transform:'a -> 'a) (list:List<'a>) =
         let myId (x:List<'a>) = x
@@ -63,8 +65,8 @@ module public ListExt =
         | Node(_, tail) -> first predicate tail
 
     let last predicate list =
-        let rec realyLast predicate list2 acc =
-            match list2 with
+        let rec realyLast predicate list acc =
+            match list with
             | Empty -> acc
             | Node(head, tail) when predicate head -> realyLast predicate tail head
             | Node(_, tail) -> realyLast predicate tail acc
@@ -125,7 +127,7 @@ module public ListExt =
             match list with
             | Empty -> acc
             | Node(x, tail) when predicate x ->
-                countInternal predicate tail acc + 1
+                countInternal predicate tail <| acc + 1
             | Node(_, tail) ->
                 countInternal predicate tail acc
         countInternal predicate list 0 

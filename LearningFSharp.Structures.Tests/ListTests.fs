@@ -370,6 +370,15 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
+    member this.``Test: 'first'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0 |> reverse
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let element = list |> first (fun x -> x = 19999)
+        printfn "%i" <| element
+
+    [<Test>]
     member this.``Test: 'last'. If list is EMPTY then return default value.``() =
 
         // Arrange
@@ -476,6 +485,15 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
+    member this.``Test: 'last'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let element = list |> last (fun x -> x = 19999)
+        printfn "%i" <| element
+
+    [<Test>]
     member this.``Test: 'max'. If list is EMPTY then return default value.``() =
 
         // Arrange
@@ -579,6 +597,15 @@ type ListTests() =
         
         // Assert
         actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'max'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0 |> reverse
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let element = list |> max (fun x y -> if x > y then 1 else 0)
+        printfn "%i" <| element
 
     [<Test>]
     member this.``Test: 'min'. If list is EMPTY then return default value.``() =
@@ -687,6 +714,15 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
+    member this.``Test: 'min'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let element = list |> min (fun x y -> if x > y then 1 else 0)
+        printfn "%i" <| element
+
+    [<Test>]
     member this.``Test: 'all'. If list is EMPTY then return true.``() =
 
         // Arrange
@@ -789,6 +825,15 @@ type ListTests() =
         
         // Assert
         actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'all'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let element = list |> all (fun x -> x > -1)
+        printfn "%b" <| element
 
     [<Test>]
     member this.``Test: 'any'. If list is EMPTY then return false.``() =
@@ -895,6 +940,15 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
+    member this.``Test: 'any'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0 |> reverse
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let element = list |> any (fun x -> x > stackItems - 2)
+        printfn "%b" <| element
+
+    [<Test>]
     member this.``Test: 'reverse'. If list is EMPTY then return empty list.``() =
 
         // Arrange
@@ -945,6 +999,15 @@ type ListTests() =
 
         // Assert
         actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'reverse'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let count = countList (list |> reverse) 0
+        printfn "%i" <| count
 
     [<Test>]
     member this.``Test: 'count'. If list is EMPTY then return zero.``() =
@@ -1025,6 +1088,15 @@ type ListTests() =
         actual |> should equal expected
 
     [<Test>]
+    member this.``Test: 'count'. Stack overflow.``() =
+        let list = create stackItems List.Empty 0
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let count = list |> ListExt.count (fun x -> x >= 0)
+        printfn "%i" <| count
+
+    [<Test>]
     member this.``Test: 'mapMany'. If list is EMPTY then return empty list.``() =
 
         // Arrange
@@ -1075,6 +1147,16 @@ type ListTests() =
 
         // Assert
         actual |> should equal expected
+
+    [<Test>]
+    member this.``Test: 'mapMany'. Stack overflow.``() =
+        
+        let list = List.Node(create stackItems List.Empty 0,  List.Node(create stackItems List.Empty 0, List.Node(create stackItems List.Empty 0, List.Empty)))
+        let count = countList list 0
+        printfn "%i" <| count
+        
+        let count = countList (list |> mapMany (fun x -> x)) 0 
+        printfn "%i" <| count
 
     [<Test>]
     member this.``Test: 'concat'. If list is EMPTY then return empty list.``() =
