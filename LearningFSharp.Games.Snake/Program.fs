@@ -14,18 +14,6 @@ type Direction =
     | Right
     | None
 
-let (| Direction |) (direction:Direction) (key:System.ConsoleKey) =
-    match key with
-    | ConsoleKey.UpArrow when direction = Down -> None
-    | ConsoleKey.UpArrow -> Up
-    | ConsoleKey.DownArrow when direction = Up  -> None
-    | ConsoleKey.DownArrow -> Down
-    | ConsoleKey.LeftArrow when direction = Right  -> None
-    | ConsoleKey.LeftArrow -> Left
-    | ConsoleKey.RightArrow when direction = Left  -> None
-    | ConsoleKey.RightArrow -> Right
-    | _ -> None
-
 type Snake =
     | Head of Position * Direction * Snake
     | Body of Position * Snake
@@ -53,22 +41,34 @@ let clearSnake snake =
 let drawSnake snake = 
     processSnake (fun x y -> draw (x, y) '0') (fun x y -> draw (x, y) '*') () snake
 
-let updateSnakeDirection snake =
-    match snake with
-    | Head(position, direction, body) ->
-        match Console.ReadKey().Key with 
-        | Direction direction Up -> 
-            Head(position, Up, body)
-        | Direction direction Down  ->
-            Head(position, Down, body)
-        | Direction direction Left ->
-            Head(position, Left, body)
-        | Direction direction Right ->
-            Head(position, Right, body)
-        | _ -> Head(position, direction, body)    
-    | Body(_, _)
-    | Tail ->
-        failwith "Snake should have Head!!"
+let updateSnakeDirection (move: Direction option) snake =
+    match move with
+    | Some newDirection ->
+        match snake with
+        | Head(position, direction, body) ->
+            match direction, newDirection with 
+            | Up, Up ->
+                snake
+            | Down, Down ->
+                snake
+            | Left, Left ->
+                snake
+            | Right , Right ->
+                snake
+            | Up, Down->
+                snake
+            | Down, Up ->
+                snake
+            | Left , Right ->
+                snake
+            | Right, Left->
+                snake
+            | _ -> Head(position, newDirection, body)
+        | Body(_, _)
+        | Tail ->
+            failwith "Snake should have Head!!"
+    | _ -> 
+        snake
 
 let moveSnake snake =
     let rec moveInternal (x, y) snake =    
@@ -92,36 +92,75 @@ let moveSnake snake =
     | Tail ->
         failwith "Snake should have Head!!"
 
-let rec gameLoop snake speed =
-    
-    let current = DateTime.Now
-
-    let snake = 
-        snake 
-            |> clearSnake
-            |> updateSnakeDirection
-            |> moveSnake
-            |> drawSnake
-    
-    match DateTime.Now.Subtract(current) with
-    | elapsed when elapsed + speed > TimeSpan.Zero -> Thread.Sleep(elapsed)
-    | _ -> ()
-
-    gameLoop snake speed
-
 [<EntryPoint>]
 let main argv =
     Console.CursorVisible <- false
 
     // TODO:
-    // Implement async control input
     // Game over if snake it self
     // Game over if snake move away of the screen
     // Create snake with head only
     // Set snake initiali postion in the center of the screen
 
-    let snake = Head({X = 0; Y = 0}, Down, Body({X = 1; Y = 0}, Body({X = 2; Y = 0},  Body({X = 3; Y = 0}, Tail))))
-    
-    gameLoop snake <|new TimeSpan(0, 0, 1)
-    
+    let speed = 250
+
+    let agent = MailboxProcessor.Start(fun inbox -> 
+        let rec loop snake = async {
+
+            let time = DateTime.Now
+
+            let! msg = inbox.TryReceive(speed)
+
+            let snake = 
+                snake 
+                    |> clearSnake
+                    |> updateSnakeDirection msg
+                    |> moveSnake
+                    |> drawSnake
+
+            let diff = TimeSpan.FromMilliseconds(250.0) - time.Subtract(DateTime.Now)
+
+            if diff > TimeSpan.Zero
+            then 
+                Thread.Sleep((int diff.TotalMilliseconds))
+            else 
+                ()
+
+            do! loop snake
+        }
+        
+        let snake = Head({X = 0; Y = 0}, Down, Body({X = 1; Y = 0}, Body({X = 2; Y = 0},  Body({X = 3; Y = 0}, Tail))))
+
+        loop snake
+    )    
+
+    let rec controlLoop key =
+        
+        match Console.ReadKey().Key with
+        | ConsoleKey.UpArrow when key <> Up ->
+            agent.Post(Up)
+            controlLoop Up
+        | ConsoleKey.UpArrow ->
+            controlLoop Up
+        | ConsoleKey.DownArrow when key <> Down -> 
+            agent.Post(Down)
+            controlLoop Down
+        | ConsoleKey.DownArrow ->
+            controlLoop Down
+        | ConsoleKey.LeftArrow when key <> Left -> 
+            agent.Post(Left)
+            controlLoop Left
+        | ConsoleKey.LeftArrow ->
+            controlLoop Left
+        | ConsoleKey.RightArrow when key <> Right  -> 
+            agent.Post(Right)
+            controlLoop Right
+        | ConsoleKey.RightArrow ->
+            controlLoop Right
+        | ConsoleKey.Escape ->
+            ()
+        | _ -> 
+            controlLoop None
+
+    controlLoop None
     0
